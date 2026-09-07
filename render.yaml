@@ -2,20 +2,16 @@ services:
   - type: web
     name: student-elearning-portal
     runtime: python
-    plan: starter
-    buildCommand: pip install -r requirements.txt
+    plan: free
+    buildCommand: pip install -r requirements.txt && python -c "from pathlib import Path; assert Path('template/index.html').is_file(), 'template/index.html is missing from the deployed repository'"
     startCommand: gunicorn --bind 0.0.0.0:$PORT wsgi:app
-    disk:
-      name: student-portal-data
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: RENDER
         value: "true"
       - key: DATABASE_PATH
-        value: /var/data/database.db
+        value: /tmp/student-portal/database.db
       - key: UPLOAD_FOLDER
-        value: /var/data/uploads
+        value: /tmp/student-portal/uploads
       - key: SECRET_KEY
         generateValue: true
       - key: ADMIN_USERNAME
