@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: student-elearning-portal
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT wsgi:app
+    disk:
+      name: student-portal-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: RENDER
+        value: "true"
+      - key: DATABASE_PATH
+        value: /var/data/database.db
+      - key: UPLOAD_FOLDER
+        value: /var/data/uploads
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: PYTHON_VERSION
+        value: "3.12.0"
